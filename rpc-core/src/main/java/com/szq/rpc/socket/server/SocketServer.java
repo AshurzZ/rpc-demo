@@ -1,6 +1,6 @@
 package com.szq.rpc.socket.server;
 
-import com.szq.rpc.RpcServer;
+import com.szq.rpc.server.RpcServer;
 import com.szq.rpc.registry.ServiceRegistry;
 import com.szq.rpc.server.RequestHandler;
 import org.slf4j.Logger;

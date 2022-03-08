@@ -1,10 +1,7 @@
-package com.szq.rpc.api;
+package com.szq.rpc.enumertaion;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import lombok.Getter;
 
 /**
  * @author Ashur
@@ -20,16 +17,15 @@ import java.io.Serializable;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-@Data
-@NoArgsConstructor
-//自动加上所有属性的get set toString hashCode equals方法
 @AllArgsConstructor
-//添加一个含有所有已声明字段属性参数的构造函数
-public class HelloObject implements Serializable {
-    //Serializable序列化接口没有任何方法或者字段，只是用于标识可序列化的语义。
-    //实现了Serializable接口的类可以被ObjectOutputStream转换为字节流。
-    //同时也可以通过ObjectInputStream再将其解析为对象。
-    //序列化是指把对象转换为字节序列的过程;反序列化则是把持久化的字节文件数据恢复为对象的过程。
-    private Integer id;
-    private String message;
+@Getter
+public enum RpcError {
+    SERVICE_INVOCATION_FAILURE("服务调用出现失败"),
+//    SERVICE_CAN_NOT_BE_NULL("注册的服务不能为空"),
+    SERVICE_NOT_FOUND("找不到对应的服务"),
+    SERVICE_NOT_IMPLEMENT_ANY_INTERFACE("注册的服务未实现接口"),
+    UNKNOWN_PROTOCOL("不识别的协议包"),
+    UNKNOWN_SERIALIZER("不识别的(反)序列化器"),
+    UNKNOWN_PACKAGE_TYPE("不识别的数据包类型");
+    private final String message;
 }

@@ -1,7 +1,9 @@
 package com.szq.rpc.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -20,8 +22,8 @@ import java.io.Serializable;
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
 @Data
-@Builder
-//使用创建者模式，一次性给所有变量初始赋值
+@NoArgsConstructor
+@AllArgsConstructor
 public class RpcRequest implements Serializable {
     /**
      * 待调用接口名称
@@ -32,11 +34,12 @@ public class RpcRequest implements Serializable {
      */
     private String methodName;
     /**
-     * 待调用方法的参数类型
-     */
-    private Class<?>[] paramTypes;
-    /**
      * 待调用方法的参数
      */
     private Object[] parameters;
+    /**
+     * 待调用方法的参数类型
+     */
+    private Class<?>[] paramTypes;
+
 }

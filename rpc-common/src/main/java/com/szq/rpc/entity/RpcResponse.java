@@ -2,6 +2,7 @@ package com.szq.rpc.entity;
 
 import com.szq.rpc.enumertaion.ResponseCode;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -20,6 +21,7 @@ import java.io.Serializable;
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
 @Data
+@NoArgsConstructor
 public class RpcResponse<T> implements Serializable {
     private Integer statusCode;
     private String message;

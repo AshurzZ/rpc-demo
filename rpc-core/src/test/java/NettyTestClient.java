@@ -1,7 +1,8 @@
+import com.szq.rpc.client.RpcClient;
+import com.szq.rpc.client.RpcClientProxy;
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
-import com.szq.rpc.client.RpcClientProxy;
-import com.szq.rpc.socket.server.SocketClient;
+import com.szq.rpc.netty.client.NettyClient;
 
 /**
  * @author Ashur
@@ -17,16 +18,23 @@ import com.szq.rpc.socket.server.SocketClient;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public class TestClient {
+public class NettyTestClient {
     public static void main(String[] args) {
-        SocketClient client = new SocketClient("127.0.0.1", 9000);
-        //接口与代理对象之间的中介对象
-        RpcClientProxy proxy = new RpcClientProxy(client);
-        //创建代理对象
-        HelloService helloService = proxy.getProxy(HelloService.class);
-        //接口方法的参数对象
-        //由动态代理可知，代理对象调用hello()实际会执行invoke()
-        HelloObject object = new HelloObject(12, "This is test message");
+//        RpcClient client = new NettyClient("127.0.0.1", 9999);
+//        //接口与代理对象之间的中介对象
+//        RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
+//        //创建代理对象
+//        HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
+//        //接口方法的参数对象
+//        //由动态代理可知，代理对象调用hello()实际会执行invoke()
+//        HelloObject object = new HelloObject(12, "netty test");
+//        String res = helloService.hello(object);
+//        System.out.println(res);
+
+        RpcClient client = new NettyClient("127.0.0.1", 9999);
+        RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
+        HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
+        HelloObject object = new HelloObject(12, "this is netty style");
         String res = helloService.hello(object);
         System.out.println(res);
     }

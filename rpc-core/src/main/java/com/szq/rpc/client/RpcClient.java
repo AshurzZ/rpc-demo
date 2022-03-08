@@ -1,4 +1,4 @@
-package com.szq.rpc;
+package com.szq.rpc.client;
 
 import com.szq.rpc.entity.RpcRequest;
 

@@ -1,13 +1,14 @@
-package com.szq.rpc;
+package com.szq.rpc.codec;
 
-import com.szq.rpc.client.SocketClient;
 import com.szq.rpc.entity.RpcRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.szq.rpc.enumertaion.PackageType;
+import com.szq.rpc.serializer.CommonSerializer;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToByteEncoder;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import static java.lang.System.out;
+
 
 /**
  * @author Ashur
@@ -23,25 +24,29 @@ import java.lang.reflect.Proxy;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public class RpcClientProxy implements InvocationHandler {
-    private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
-    private final SocketClient client;
 
-    public RpcClientProxy(SocketClient client){
-        this.client = client;
-    }
+public class CommonEncoder extends MessageToByteEncoder {
 
-    //抑制编译器产生警告信息
-    @SuppressWarnings("unchecked")
-    public <T> T getProxy(Class<T> clazz){
-        //创建代理对象
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, this);
+    private static final int MAGIC_NUMBER = 0xCAFEBABE;
+
+    private final CommonSerializer serializer;
+
+    public CommonEncoder(CommonSerializer serializer){
+        this.serializer = serializer;
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        logger.info("调用方法：{}#{}", method.getDeclaringClass().getName(), method.getName());
-        RpcRequest rpcRequest = new RpcRequest(method.getDeclaringClass().getName(), method.getName(), args, method.getParameterTypes());
-        return client.sendRequest(rpcRequest);
+    protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
+        //数据写到缓冲区
+        out.writeInt(MAGIC_NUMBER);
+        if(msg instanceof RpcRequest){
+            out.writeInt(PackageType.REQUEST_PACK.getCode());
+        }else {
+            out.writeInt(PackageType.RESPONSE_PACK.getCode());
+        }
+        out.writeInt(serializer.getCode());
+        byte[] bytes = serializer.serialize(msg);
+        out.writeInt(bytes.length);
+        out.writeBytes(bytes);
     }
 }

@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>szq-rpc-demo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
     <!-- 打包方式：pom用于父级或聚合工程中jar包的版本控制 -->
     <packaging>pom</packaging>
 
@@ -45,6 +45,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.30</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.50.Final</version>
         </dependency>
     </dependencies>
 </project>

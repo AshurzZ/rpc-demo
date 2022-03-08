@@ -1,4 +1,4 @@
-package com.szq.rpc;
+import com.szq.rpc.api.HelloService;
 
 /**
  * @author Ashur
@@ -14,6 +14,7 @@ package com.szq.rpc;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public interface RpcServer {
-    void  start(int port);
+public class TestServer {
+    public static void main(String[] args) {
+    }
 }

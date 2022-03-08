@@ -1,6 +1,6 @@
-package com.szq.rpc.client;
+package com.szq.rpc.socket.server;
 
-import com.szq.rpc.RpcClient;
+import com.szq.rpc.client.RpcClient;
 import com.szq.rpc.entity.RpcRequest;
 import com.szq.rpc.entity.RpcResponse;
 import com.szq.rpc.enumertaion.ResponseCode;
