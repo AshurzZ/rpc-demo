@@ -1,5 +1,16 @@
 package com.szq.rpc.serializer;
 
+import com.caucho.hessian.io.HessianInput;
+import com.caucho.hessian.io.HessianOutput;
+import com.szq.rpc.enumertaion.SerializerCode;
+import com.szq.rpc.exception.SerializeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 /**
  * @author Ashur
  * @desc 动态规划一般用于求最大值问题
@@ -14,5 +25,46 @@ package com.szq.rpc.serializer;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public class HessianSerializer {
+public class HessianSerializer implements CommonSerializer{
+    private static final Logger logger = LoggerFactory.getLogger(HessianSerializer.class);
+
+    @Override
+    public byte[] serialize(Object obj) {
+        HessianOutput hessianOutput = null;
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()){
+            hessianOutput = new HessianOutput(byteArrayOutputStream);
+            hessianOutput.writeObject(obj);
+            return byteArrayOutputStream.toByteArray();
+        }catch (IOException e){
+            logger.error("序列化时有错误发生" + e);
+            throw new SerializeException("序列化时有错误发生");
+        }finally {
+            if(hessianOutput != null){
+                try {
+                    hessianOutput.close();
+                }catch (IOException e){
+                    logger.error("关闭output流时有错误发生" + e);
+                }
+            }
+        }
+    }
+    @Override
+    public Object deserialize(byte[] bytes, Class<?> clazz) {
+        HessianInput hessianInput = null;
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)){
+            hessianInput = new HessianInput(byteArrayInputStream);
+            return hessianInput.readObject();
+        }catch (IOException e){
+            logger.error("反序列化时有错误发生" + e);
+            throw new SerializeException("反序列化时有错误发生");
+        }finally {
+            if(hessianInput != null){
+                hessianInput.close();
+            }
+        }
+    }
+    @Override
+    public int getCode() {
+        return SerializerCode.valueOf("HESSIAN").getCode();
+    }
 }

@@ -34,14 +34,8 @@ public class NettyClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
 
-    private String host;
-    private int port;
-    private static final Bootstrap bootstrap;
 
-    public NettyClient(String host, int port){
-        this.host = host;
-        this.port = port;
-    }
+    private static final Bootstrap bootstrap;
 
     static {
         EventLoopGroup group = new NioEventLoopGroup();
@@ -58,6 +52,12 @@ public class NettyClient implements RpcClient {
                                 .addLast(new NettyClientHandler());
                     }
                 });
+    }
+    private String host;
+    private int port;
+    public NettyClient(String host, int port){
+        this.host = host;
+        this.port = port;
     }
 
     @Override
