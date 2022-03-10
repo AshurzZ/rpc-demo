@@ -3,6 +3,7 @@ import com.szq.rpc.client.RpcClientProxy;
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
 import com.szq.rpc.netty.client.NettyClient;
+import com.szq.rpc.serializer.HessianSerializer;
 
 /**
  * @author Ashur
@@ -32,6 +33,7 @@ public class NettyTestClient {
 //        System.out.println(res);
 
         RpcClient client = new NettyClient("127.0.0.1", 9999);
+        client.setSerializer(new HessianSerializer());
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(12, "this is netty style");

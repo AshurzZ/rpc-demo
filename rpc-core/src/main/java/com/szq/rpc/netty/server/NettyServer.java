@@ -1,5 +1,8 @@
 package com.szq.rpc.netty.server;
 
+import com.szq.rpc.enumertaion.RpcError;
+import com.szq.rpc.exception.RpcException;
+import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.serializer.HessianSerializer;
 import com.szq.rpc.serializer.KryoSerializer;
 import com.szq.rpc.server.RpcServer;
@@ -32,8 +35,13 @@ import org.slf4j.LoggerFactory;
  */
 public class NettyServer implements RpcServer {
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
+    private CommonSerializer serializer;
     @Override
     public void start(int port) {
+        if (serializer == null) {
+            logger.error("未设置序列化器");
+            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+        }
         //用于处理客户端新连接的主“线程池”
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         //用于连接后处理IO事件的从“线程池”
@@ -61,7 +69,7 @@ public class NettyServer implements RpcServer {
                     ChannelPipeline pipeline = ch.pipeline();
                     //往管道中添加Handler，注意入站Handler与出站Handler都必须按实际执行顺序添加，比如先解码再Server处理，那Decoder()就要放在前面。
                     //但入站和出站Handler之间则互不影响，这里我就是先添加的出站Handler再添加的入站
-                    pipeline.addLast(new CommonEncoder(new HessianSerializer()))
+                    pipeline.addLast(new CommonEncoder(serializer))
                             .addLast(new CommonDecoder())
                             .addLast(new NettyServerHandler());
                 }
@@ -77,5 +85,10 @@ public class NettyServer implements RpcServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    @Override
+    public void setSerializer(CommonSerializer serializer) {
+        this.serializer = serializer;
     }
 }

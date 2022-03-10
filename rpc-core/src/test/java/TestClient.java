@@ -1,6 +1,7 @@
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
 import com.szq.rpc.client.RpcClientProxy;
+import com.szq.rpc.serializer.KryoSerializer;
 import com.szq.rpc.socket.server.SocketClient;
 
 /**
@@ -21,6 +22,7 @@ public class TestClient {
     public static void main(String[] args) {
         SocketClient client = new SocketClient("127.0.0.1", 9000);
         //接口与代理对象之间的中介对象
+        client.setSerializer(new KryoSerializer());
         RpcClientProxy proxy = new RpcClientProxy(client);
         //创建代理对象
         HelloService helloService = proxy.getProxy(HelloService.class);

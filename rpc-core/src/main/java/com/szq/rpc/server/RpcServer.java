@@ -1,5 +1,7 @@
 package com.szq.rpc.server;
 
+import com.szq.rpc.serializer.CommonSerializer;
+
 /**
  * @author Ashur
  * @desc 动态规划一般用于求最大值问题
@@ -16,4 +18,5 @@ package com.szq.rpc.server;
  */
 public interface RpcServer {
     void  start(int port);
+    void setSerializer(CommonSerializer serializer);
 }
