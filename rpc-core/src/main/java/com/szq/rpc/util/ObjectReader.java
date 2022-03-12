@@ -54,15 +54,15 @@ public class ObjectReader {
     }
     /**
      * @description 字节数组转换为Int
-     * @param [src]
+     * @param src
      * @return [int]
      */
     private static int bytesToInt(byte[] src) {
         int value;
-        value = (src[0] & 0xFF)
-                | ((src[1] & 0xFF)<<8)
-                | ((src[2] & 0xFF)<<16)
-                | ((src[3] & 0xFF)<<24);
+        value = ((src[0] & 0xFF) << 24)
+                |((src[1] & 0xFF) << 16)
+                |((src[2] & 0xFF) << 8)
+                |(src[3] & 0xFF);
         return value;
     }
 }
