@@ -10,13 +10,8 @@
         <module name="rpc-server" />
         <module name="rpc-common" />
         <module name="rpc-api" />
-        <module name="rpc-core" />
-      </profile>
-      <profile name="Annotation profile for szq-rpc-demo" enabled="true">
-        <sourceOutputDir name="../rpc-cilent/target/generated-sources/annotations" />
-        <sourceTestOutputDir name="../rpc-cilent/target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
         <module name="rpc-cilent" />
+        <module name="rpc-core" />
       </profile>
     </annotationProcessing>
   </component>

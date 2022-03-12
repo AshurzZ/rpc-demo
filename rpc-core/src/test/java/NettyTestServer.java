@@ -3,6 +3,7 @@ import com.szq.rpc.netty.server.NettyServer;
 import com.szq.rpc.registry.DefaultServiceRegistry;
 import com.szq.rpc.registry.ServiceRegistry;
 import com.szq.rpc.serializer.KryoSerializer;
+import com.szq.rpc.serializer.ProtostuffSerializer;
 
 /**
  * @author Ashur
@@ -24,7 +25,7 @@ public class NettyTestServer {
         ServiceRegistry registry = new DefaultServiceRegistry();
         registry.register(helloService);
         NettyServer server = new NettyServer();
-        server.setSerializer(new KryoSerializer());
+        server.setSerializer(new ProtostuffSerializer());
         server.start(9999);
     }
 }
