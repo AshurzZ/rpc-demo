@@ -20,7 +20,7 @@ import com.szq.rpc.socket.server.SocketClient;
  */
 public class TestClient {
     public static void main(String[] args) {
-        SocketClient client = new SocketClient("127.0.0.1", 9000);
+        SocketClient client = new SocketClient("127.0.0.1", 9999);
         //接口与代理对象之间的中介对象
         client.setSerializer(new KryoSerializer());
         RpcClientProxy proxy = new RpcClientProxy(client);

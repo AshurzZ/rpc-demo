@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>szq-rpc-demo</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <!-- 打包方式：pom用于父级或聚合工程中jar包的版本控制 -->
     <packaging>pom</packaging>
 
@@ -15,7 +15,7 @@
         <module>rpc-api</module>
         <module>rpc-common</module>
         <module>rpc-core</module>
-        <module>rpc-cilent</module>
+        <module>rpc-client</module>
         <module>rpc-server</module>
     </modules>
 

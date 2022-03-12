@@ -30,7 +30,7 @@ public class TestServer {
             SocketServer socketServer = new SocketServer(serviceRegistry);
             //启动服务端
             socketServer.setSerializer(new HessianSerializer());
-            socketServer.start(9000);
+            socketServer.start(9999);
 
     }
 }

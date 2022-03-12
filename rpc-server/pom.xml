@@ -5,7 +5,7 @@
     <parent>
         <artifactId>szq-rpc-demo</artifactId>
         <groupId>org.example</groupId>
-        <version>2.0-SNAPSHOT</version>
+        <version>3.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,12 +19,18 @@
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>rpc-common</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>rpc-api</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>3.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>rpc-api</artifactId>
+            <version>3.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

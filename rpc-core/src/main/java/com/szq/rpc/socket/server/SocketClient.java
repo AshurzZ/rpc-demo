@@ -9,6 +9,7 @@ import com.szq.rpc.exception.RpcException;
 import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.util.ObjectReader;
 import com.szq.rpc.util.ObjectWriter;
+import com.szq.rpc.util.RpcMessageChecker;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -47,14 +48,7 @@ public class SocketClient implements RpcClient {
             ObjectWriter.writeObject(outputStream, rpcRequest, serializer);
             Object obj = ObjectReader.readObject(inputStream);
             RpcResponse rpcResponse = (RpcResponse) obj;
-            if(rpcResponse == null){
-                logger.error("服务调用失败，service:{}" + rpcRequest.getInterfaceName());
-                throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE, "service:" + rpcRequest.getInterfaceName());
-            }
-            if(rpcResponse.getStatusCode() == null || rpcResponse.getStatusCode() != ResponseCode.SUCCESS.getCode()){
-                logger.error("服务调用失败，service:{} response:{}", rpcRequest.getInterfaceName(), rpcResponse);
-                throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE, "service:" + rpcRequest.getInterfaceName());
-            }
+            RpcMessageChecker.check(rpcRequest, rpcResponse);
             return rpcResponse.getData();
         } catch (IOException e) {
             logger.error("调用时有错误发生：" + e);
