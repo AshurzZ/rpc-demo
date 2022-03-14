@@ -29,21 +29,24 @@ public class SocketServer implements RpcServer {
     private final ExecutorService threadPool;
     private final String host;
     private final int port;
-    private CommonSerializer serializer;
-    private RequestHandler requestHandler = new RequestHandler();
+    private final CommonSerializer serializer;
+    private final RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegistry serviceRegistry;
     private final ServiceProvider serviceProvider;
 
     public SocketServer(String host, int port) {
+        this(host, port, DEFAULT_SERIALIZER);
+    }
+    public SocketServer(String host, int port, Integer serializerCode){
         this.host = host;
         this.port = port;
         serviceRegistry = new NacosServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
+        serializer = CommonSerializer.getByCode(serializerCode);
         //创建线程池
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
     }
     /**
-
      * @description 将服务保存在本地的注册表，同时注册到Nacos注册中心
      * @param service, serviceClass]
      * @return [void]
@@ -82,9 +85,6 @@ public class SocketServer implements RpcServer {
         }
     }
 
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
     }
 
-}
+

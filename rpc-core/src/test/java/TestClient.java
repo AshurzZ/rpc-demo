@@ -1,5 +1,6 @@
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
+import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.transport.RpcClient;
 import com.szq.rpc.transport.RpcClientProxy;
 import com.szq.rpc.serializer.KryoSerializer;
@@ -22,9 +23,8 @@ import com.szq.rpc.transport.socket.server.SocketClient;
  */
 public class TestClient {
     public static void main(String[] args) {
-        SocketClient client = new SocketClient();
+        SocketClient client = new SocketClient(CommonSerializer.KRYO_SERIALIZER);
         //接口与代理对象之间的中介对象
-        client.setSerializer(new KryoSerializer());
         RpcClientProxy proxy = new RpcClientProxy(client);
         //创建代理对象
         HelloService helloService = proxy.getProxy(HelloService.class);

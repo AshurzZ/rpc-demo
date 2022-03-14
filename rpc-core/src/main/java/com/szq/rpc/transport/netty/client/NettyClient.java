@@ -49,11 +49,17 @@ public class NettyClient implements RpcClient {
                 .option(ChannelOption.SO_KEEPALIVE, true);
     }
 
-    private CommonSerializer serializer;
+    private final CommonSerializer serializer;
     private final ServiceDiscovery serviceDiscovery;
-    public NettyClient(){
-        serviceDiscovery = new NacosServiceDiscovery();
+    public NettyClient() {
+        //以默认序列化器调用构造函数
+        this(DEFAULT_SERIALIZER);
     }
+    public NettyClient(Integer serializerCode){
+        serviceDiscovery = new NacosServiceDiscovery();
+        serializer = CommonSerializer.getByCode(serializerCode);
+    }
+
 
     @Override
     public Object sendRequest(RpcRequest rpcRequest) {
@@ -92,10 +98,5 @@ public class NettyClient implements RpcClient {
             Thread.currentThread().interrupt();
         }
         return result.get();
-    }
-
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
     }
 }

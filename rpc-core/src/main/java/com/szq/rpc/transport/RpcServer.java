@@ -17,8 +17,8 @@ import com.szq.rpc.serializer.CommonSerializer;
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
 public interface RpcServer {
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
     void start();
-    void setSerializer(CommonSerializer serializer);
     /**
      * @description 向Nacos注册服务
      * @param service, serviceClass]

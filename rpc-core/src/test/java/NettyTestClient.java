@@ -1,3 +1,4 @@
+import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.transport.RpcClient;
 import com.szq.rpc.transport.netty.client.NettyClient;
 import com.szq.rpc.transport.socket.server.SocketClient;
@@ -33,8 +34,8 @@ public class NettyTestClient {
 //        String res = helloService.hello(object);
 //        System.out.println(res);
 
-        RpcClient client = new NettyClient();
-        client.setSerializer(new ProtostuffSerializer());
+        RpcClient client = new NettyClient(CommonSerializer.PROTOBUF_SERIALIZER);
+
         //接口与代理对象之间的中介对象
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         //创建代理对象
