@@ -1,4 +1,4 @@
-package com.szq.rpc.transport.socket;
+package com.szq.rpc.factory;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.NoArgsConstructor;

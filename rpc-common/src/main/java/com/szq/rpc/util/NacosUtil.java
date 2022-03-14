@@ -10,7 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Ashur
@@ -20,12 +23,18 @@ import java.util.List;
 public class NacosUtil {
     private static final Logger logger = LoggerFactory.getLogger(NacosUtil.class);
 
+    private static final NamingService namingService;
+    private static final Set<String> serviceNames = new HashSet<>();
+    private static InetSocketAddress address;
     private static final String SERVER_ADDR = "127.0.0.1:8848";
     /**
      * @description 连接到Nacos创建命名空间
      * @param
      * @return [com.alibaba.nacos.api.naming.NamingService]
      */
+    static {
+        namingService = getNacosNamingService();
+    }
     public static NamingService getNacosNamingService(){
         try{
             return NamingFactory.createNamingService(SERVER_ADDR);
@@ -36,18 +45,44 @@ public class NacosUtil {
     }
     /**
      * @description 注册服务到Nacos
-     * @param namingService, serviceName, inetSocketAddress
+     * @param  serviceName, inetSocketAddress
      * @return [void]
      */
-    public static void registerService(NamingService namingService, String serviceName, InetSocketAddress inetSocketAddress) throws NacosException {
+    public static void registerService( String serviceName, InetSocketAddress inetSocketAddress) throws NacosException {
         namingService.registerInstance(serviceName, inetSocketAddress.getHostName(), inetSocketAddress.getPort());
+        NacosUtil.address = address;
+        //保存注册的服务名
+        serviceNames.add(serviceName);
     }
     /**
      * @description 获取所有提供该服务的服务端地址
-     * @param namingService, serviceName
+     * @param , serviceName
      * @return [java.util.List<com.alibaba.nacos.api.naming.pojo.Instance>]
      */
-    public  static List<Instance> getAllInstance(NamingService namingService, String serviceName) throws NacosException {
+    public  static List<Instance> getAllInstance(String serviceName) throws NacosException {
         return namingService.getAllInstances(serviceName);
+    }
+
+    /**
+     * @description 注销服务
+     * @param
+     * @return [void]
+     */
+    public static void clearRegistry(){
+        if(!serviceNames.isEmpty() && address != null){
+            String host = address.getHostName();
+            int port = address.getPort();
+            //利用迭代器迭代注销
+            Iterator<String> iterator = serviceNames.iterator();
+            while (iterator.hasNext()){
+                String serviceName = iterator.next();
+                try {
+                    //注销服务
+                    namingService.deregisterInstance(serviceName, host, port);
+                } catch (NacosException e) {
+                    logger.error("注销服务{}失败", serviceName, e);
+                }
+            }
+        }
     }
 }

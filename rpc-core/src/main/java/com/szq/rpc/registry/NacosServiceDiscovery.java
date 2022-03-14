@@ -16,10 +16,7 @@ import java.util.List;
  */
 public class NacosServiceDiscovery implements ServiceDiscovery{
     private static final Logger logger = LoggerFactory.getLogger(NacosServiceDiscovery.class);
-    private final NamingService namingService;
-    public NacosServiceDiscovery(){
-        namingService = NacosUtil.getNacosNamingService();
-    }
+
     /**
      * @description 根据服务名称从注册中心获取到一个服务提供者的地址
      * @param serviceName
@@ -29,7 +26,7 @@ public class NacosServiceDiscovery implements ServiceDiscovery{
     public InetSocketAddress lookupService(String serviceName) {
         try {
             //利用列表获取某个服务的所有提供者
-            List<Instance> instances = NacosUtil.getAllInstance(namingService, serviceName);
+            List<Instance> instances = NacosUtil.getAllInstance(serviceName);
             Instance instance = instances.get(0);
             return new InetSocketAddress(instance.getIp(), instance.getPort());
         } catch (NacosException e) {

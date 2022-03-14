@@ -2,6 +2,7 @@ package com.szq.rpc.transport.socket.server;
 
 import com.szq.rpc.enumertaion.RpcError;
 import com.szq.rpc.exception.RpcException;
+import com.szq.rpc.hook.ShutdownHook;
 import com.szq.rpc.registry.NacosServiceRegistry;
 import com.szq.rpc.provider.ServiceProviderImpl;
 import com.szq.rpc.registry.ServiceRegistry;
@@ -9,7 +10,7 @@ import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.transport.RpcServer;
 import com.szq.rpc.provider.ServiceProvider;
 import com.szq.rpc.handler.RequestHandler;
-import com.szq.rpc.transport.socket.ThreadPoolFactory;
+import com.szq.rpc.factory.ThreadPoolFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,18 +60,21 @@ public class SocketServer implements RpcServer {
     }
     /**
      * @description 服务端启动
-     * @param port
+     * @param
      * @return [void]
      */
     @Override
     public void start(){
-        try(ServerSocket serverSocket = new ServerSocket(port)) {
+        try(ServerSocket serverSocket = new ServerSocket()) {
+            serverSocket.bind(new InetSocketAddress(host, port));
             logger.info("服务器启动……");
+            //添加钩子，服务端关闭时时会注销服务
+            ShutdownHook.getShutdownHook().addClearAllHook();
             Socket socket;
             //当未接收到连接请求时，accept()会一直阻塞
             while ((socket = serverSocket.accept()) != null){
                 logger.info("客户端连接！{}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serializer));
+                threadPool.execute(new SocketRequestHandlerThread(socket, requestHandler, serializer));
             }
             threadPool.shutdown();
         }catch (IOException e){

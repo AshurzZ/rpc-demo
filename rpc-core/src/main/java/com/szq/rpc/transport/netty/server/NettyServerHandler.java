@@ -2,7 +2,7 @@ package com.szq.rpc.transport.netty.server;
 
 import com.szq.rpc.entity.RpcRequest;
 import com.szq.rpc.handler.RequestHandler;
-import com.szq.rpc.transport.socket.ThreadPoolFactory;
+import com.szq.rpc.factory.ThreadPoolFactory;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,11 +19,11 @@ import java.util.concurrent.ExecutorService;
  */
 public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
-    private static RequestHandler requestHandler;
     private static final String THREAD_NAME_PREFIX = "netty-server-handler";
-    private static final ExecutorService threadPool;
+    private final ExecutorService threadPool;
+    private final RequestHandler requestHandler;
 
-    static {
+    public NettyServerHandler() {
         requestHandler = new RequestHandler();
         //引入异步业务线程池，避免长时间的耗时业务阻塞netty本身的worker工作线程，耽误了同一个Selector中其他任务的执行
         threadPool = ThreadPoolFactory.createDefaultThreadPool(THREAD_NAME_PREFIX);
