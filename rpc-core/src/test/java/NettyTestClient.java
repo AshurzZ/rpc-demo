@@ -1,9 +1,9 @@
-import com.szq.rpc.client.RpcClient;
-import com.szq.rpc.client.RpcClientProxy;
+import com.szq.rpc.transport.RpcClient;
+import com.szq.rpc.transport.netty.client.NettyClient;
+import com.szq.rpc.transport.socket.server.SocketClient;
+import com.szq.rpc.transport.RpcClientProxy;
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
-import com.szq.rpc.netty.client.NettyClient;
-import com.szq.rpc.serializer.HessianSerializer;
 import com.szq.rpc.serializer.ProtostuffSerializer;
 
 /**
@@ -33,9 +33,11 @@ public class NettyTestClient {
 //        String res = helloService.hello(object);
 //        System.out.println(res);
 
-        RpcClient client = new NettyClient("127.0.0.1", 9999);
+        RpcClient client = new NettyClient();
         client.setSerializer(new ProtostuffSerializer());
+        //接口与代理对象之间的中介对象
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
+        //创建代理对象
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(12, "this is netty style");
         String res = helloService.hello(object);

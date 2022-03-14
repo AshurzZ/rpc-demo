@@ -1,8 +1,10 @@
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
-import com.szq.rpc.client.RpcClientProxy;
+import com.szq.rpc.transport.RpcClient;
+import com.szq.rpc.transport.RpcClientProxy;
 import com.szq.rpc.serializer.KryoSerializer;
-import com.szq.rpc.socket.server.SocketClient;
+import com.szq.rpc.transport.netty.client.NettyClient;
+import com.szq.rpc.transport.socket.server.SocketClient;
 
 /**
  * @author Ashur
@@ -20,7 +22,7 @@ import com.szq.rpc.socket.server.SocketClient;
  */
 public class TestClient {
     public static void main(String[] args) {
-        SocketClient client = new SocketClient("127.0.0.1", 9999);
+        SocketClient client = new SocketClient();
         //接口与代理对象之间的中介对象
         client.setSerializer(new KryoSerializer());
         RpcClientProxy proxy = new RpcClientProxy(client);

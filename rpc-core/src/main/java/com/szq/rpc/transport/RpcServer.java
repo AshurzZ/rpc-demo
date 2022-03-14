@@ -1,6 +1,6 @@
-import com.szq.rpc.api.HelloService;
-import com.szq.rpc.serializer.HessianSerializer;
-import com.szq.rpc.transport.socket.server.SocketServer;
+package com.szq.rpc.transport;
+
+import com.szq.rpc.serializer.CommonSerializer;
 
 /**
  * @author Ashur
@@ -16,14 +16,13 @@ import com.szq.rpc.transport.socket.server.SocketServer;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public class TestServer {
-    public static void main(String[] args) {
-            //创建服务对象
-            HelloService helloService = new HelloServiceImpl();
-            SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
-            //启动服务端
-            socketServer.setSerializer(new HessianSerializer());
-            socketServer.publishService(helloService, HelloService.class);
-
-    }
+public interface RpcServer {
+    void start();
+    void setSerializer(CommonSerializer serializer);
+    /**
+     * @description 向Nacos注册服务
+     * @param service, serviceClass]
+     * @return [void]
+     */
+    <T> void publishService(Object service, Class<T> serviceClass);
 }

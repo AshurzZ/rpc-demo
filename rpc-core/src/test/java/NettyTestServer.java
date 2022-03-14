@@ -1,8 +1,5 @@
 import com.szq.rpc.api.HelloService;
-import com.szq.rpc.netty.server.NettyServer;
-import com.szq.rpc.registry.DefaultServiceRegistry;
-import com.szq.rpc.registry.ServiceRegistry;
-import com.szq.rpc.serializer.KryoSerializer;
+import com.szq.rpc.transport.netty.server.NettyServer;
 import com.szq.rpc.serializer.ProtostuffSerializer;
 
 /**
@@ -22,10 +19,8 @@ import com.szq.rpc.serializer.ProtostuffSerializer;
 public class NettyTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        ServiceRegistry registry = new DefaultServiceRegistry();
-        registry.register(helloService);
-        NettyServer server = new NettyServer();
+        NettyServer server = new NettyServer("127.0.0.1", 9999);
         server.setSerializer(new ProtostuffSerializer());
-        server.start(9999);
+        server.publishService(helloService, HelloService.class);
     }
 }
