@@ -4,7 +4,7 @@ import com.szq.rpc.entity.RpcRequest;
 import com.szq.rpc.entity.RpcResponse;
 import com.szq.rpc.enumertaion.ResponseCode;
 import com.szq.rpc.provider.ServiceProvider;
-import com.szq.rpc.registry.ServiceProviderImpl;
+import com.szq.rpc.provider.ServiceProviderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

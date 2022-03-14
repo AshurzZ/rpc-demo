@@ -1,6 +1,8 @@
 package com.szq.rpc.transport.netty.client;
 
+import com.szq.rpc.registry.NacosServiceDiscovery;
 import com.szq.rpc.registry.NacosServiceRegistry;
+import com.szq.rpc.registry.ServiceDiscovery;
 import com.szq.rpc.registry.ServiceRegistry;
 import com.szq.rpc.transport.RpcClient;
 import com.szq.rpc.entity.RpcRequest;
@@ -34,12 +36,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class NettyClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     private CommonSerializer serializer;
 
     public NettyClient(){
-        serviceRegistry = new NacosServiceRegistry();
+        serviceDiscovery = new NacosServiceDiscovery();
     }
 
     @Override
@@ -52,7 +54,7 @@ public class NettyClient implements RpcClient {
         AtomicReference<Object> result = new AtomicReference<>();
         try {
             //从Nacos获取提供对应服务的服务端地址
-            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
             //创建Netty通道连接
             Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
             if (channel.isActive()){
@@ -72,6 +74,7 @@ public class NettyClient implements RpcClient {
                 RpcMessageChecker.check(rpcRequest, rpcResponse);
                 result.set(rpcResponse.getData());
             }else {
+                channel.close();
                 //0表示”正常“退出程序，即如果当前程序还有在执行的任务，则等待所有任务执行完成以后再退出
                 System.exit(0);
             }

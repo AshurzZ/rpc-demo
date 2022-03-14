@@ -4,7 +4,7 @@ import com.szq.rpc.enumertaion.RpcError;
 import com.szq.rpc.exception.RpcException;
 import com.szq.rpc.registry.NacosServiceRegistry;
 import com.szq.rpc.provider.ServiceProvider;
-import com.szq.rpc.registry.ServiceProviderImpl;
+import com.szq.rpc.provider.ServiceProviderImpl;
 import com.szq.rpc.registry.ServiceRegistry;
 import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.transport.RpcServer;
@@ -56,12 +56,12 @@ public class NettyServer implements RpcServer {
      * @description 将服务保存在本地的注册表，同时注册到Nacos
      * @param service, serviceClass]
      */
-    public <T> void publishService(Object service, Class<T> serviceClass) {
+    public <T> void publishService(T service, Class<T> serviceClass) {
         if (serializer == null) {
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
-        serviceProvider.addServiceProvider(service);
+        serviceProvider.addServiceProvider(service, serviceClass);
         serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
         start();
     }

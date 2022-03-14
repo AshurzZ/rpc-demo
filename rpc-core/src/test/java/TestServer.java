@@ -19,7 +19,7 @@ import com.szq.rpc.transport.socket.server.SocketServer;
 public class TestServer {
     public static void main(String[] args) {
             //创建服务对象
-            HelloService helloService = new HelloServiceImpl();
+            HelloService helloService = new HelloServiceImpl2();
             SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
             //启动服务端
             socketServer.setSerializer(new HessianSerializer());

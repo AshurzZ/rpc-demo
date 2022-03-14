@@ -12,7 +12,7 @@ public interface ServiceProvider {
      * @param <T> 服务实体类
      * @return [void]
      */
-    <T> void addServiceProvider(T service);
+    <T> void addServiceProvider(T service, Class<T> serviceClass);
 
     /**
      * @description 根据服务名获取服务实体

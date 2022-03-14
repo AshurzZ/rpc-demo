@@ -24,5 +24,5 @@ public interface RpcServer {
      * @param service, serviceClass]
      * @return [void]
      */
-    <T> void publishService(Object service, Class<T> serviceClass);
+    <T> void publishService(T service, Class<T> serviceClass);
 }

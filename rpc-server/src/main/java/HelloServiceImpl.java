@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Ashur
+ * @description 服务端api接口实现
  */
 public class HelloServiceImpl implements HelloService {
     /**
@@ -16,7 +17,7 @@ public class HelloServiceImpl implements HelloService {
     @Override
     public String hello(HelloObject object) {
         //使用{}可以直接将getMessage()内容输出
-        logger.info("接收到：{}", object.getMessage());
-        return "这是调用的返回值：id=" + object.getId();
+        logger.info("接收到消息：{}", object.getMessage());
+        return "本次处理来自Netty服务";
     }
 }

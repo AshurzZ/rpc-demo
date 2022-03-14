@@ -1,6 +1,8 @@
 package com.szq.rpc.transport.socket.server;
 
+import com.szq.rpc.registry.NacosServiceDiscovery;
 import com.szq.rpc.registry.NacosServiceRegistry;
+import com.szq.rpc.registry.ServiceDiscovery;
 import com.szq.rpc.registry.ServiceRegistry;
 import com.szq.rpc.transport.RpcClient;
 import com.szq.rpc.entity.RpcRequest;
@@ -25,10 +27,10 @@ import java.net.Socket;
  */
 public class SocketClient implements RpcClient {
     private  static final Logger logger =  LoggerFactory.getLogger(SocketClient.class);
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
     private CommonSerializer serializer;
     public SocketClient() {
-        serviceRegistry = new NacosServiceRegistry();
+        serviceDiscovery = new NacosServiceDiscovery();
     }
 
 
@@ -39,7 +41,7 @@ public class SocketClient implements RpcClient {
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
         //从Nacos获取提供对应服务的服务端地址
-        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
         /**
          * socket套接字实现TCP网络传输
          * try()中一般放对资源的申请，若{}出现异常，()资源会自动关闭
