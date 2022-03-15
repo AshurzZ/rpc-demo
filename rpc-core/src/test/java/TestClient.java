@@ -1,5 +1,6 @@
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
+import com.szq.rpc.loadbalancer.RoundRobinLoadBalancer;
 import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.transport.RpcClient;
 import com.szq.rpc.transport.RpcClientProxy;
@@ -23,15 +24,18 @@ import com.szq.rpc.transport.socket.server.SocketClient;
  */
 public class TestClient {
     public static void main(String[] args) {
-        SocketClient client = new SocketClient(CommonSerializer.KRYO_SERIALIZER);
+        SocketClient client = new SocketClient(CommonSerializer.KRYO_SERIALIZER, new RoundRobinLoadBalancer());
         //接口与代理对象之间的中介对象
         RpcClientProxy proxy = new RpcClientProxy(client);
         //创建代理对象
         HelloService helloService = proxy.getProxy(HelloService.class);
         //接口方法的参数对象
-        //由动态代理可知，代理对象调用hello()实际会执行invoke()
         HelloObject object = new HelloObject(12, "This is test message");
-        String res = helloService.hello(object);
-        System.out.println(res);
+        //由动态代理可知，代理对象调用hello()实际会执行invoke()
+        for(int i = 0; i < 20; i++){
+            //由动态代理可知，代理对象调用hello()实际会执行invoke()
+            String res = helloService.hello(object);
+            System.out.println(res);
+        }
     }
 }

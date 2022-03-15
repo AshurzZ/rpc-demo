@@ -1,5 +1,7 @@
 package com.szq.rpc.transport.socket.server;
 
+import com.szq.rpc.loadbalancer.LoadBalancer;
+import com.szq.rpc.loadbalancer.RandomLoadBalancer;
 import com.szq.rpc.registry.NacosServiceDiscovery;
 import com.szq.rpc.registry.NacosServiceRegistry;
 import com.szq.rpc.registry.ServiceDiscovery;
@@ -16,7 +18,9 @@ import com.szq.rpc.transport.socket.util.ObjectWriter;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -29,14 +33,24 @@ public class SocketClient implements RpcClient {
     private  static final Logger logger =  LoggerFactory.getLogger(SocketClient.class);
     private final ServiceDiscovery serviceDiscovery;
     private final CommonSerializer serializer;
+
     public SocketClient() {
-        this(DEFAULT_SERIALIZER);
-    }
-    public SocketClient(Integer serializerCode) {
-        serviceDiscovery = new NacosServiceDiscovery();
-        serializer = CommonSerializer.getByCode(serializerCode);
+        //以默认序列化器调用构造函数
+        this(DEFAULT_SERIALIZER, new RandomLoadBalancer());
     }
 
+    public SocketClient(LoadBalancer loadBalancer){
+        this(DEFAULT_SERIALIZER, loadBalancer);
+    }
+
+    public SocketClient(Integer serializerCode){
+        this(serializerCode, new RandomLoadBalancer());
+    }
+
+    public SocketClient(Integer serializerCode, LoadBalancer loadBalancer) {
+        serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
+        serializer = CommonSerializer.getByCode(serializerCode);
+    }
 
     @Override
     public Object sendRequest(RpcRequest rpcRequest) {
@@ -58,7 +72,7 @@ public class SocketClient implements RpcClient {
             Object obj = ObjectReader.readObject(inputStream);
             RpcResponse rpcResponse = (RpcResponse) obj;
             RpcMessageChecker.check(rpcRequest, rpcResponse);
-            return rpcResponse.getData();
+            return rpcResponse;
         } catch (IOException e) {
             logger.error("调用时有错误发生：" + e);
             throw new RpcException("服务调用失败：", e);
