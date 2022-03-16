@@ -1,14 +1,17 @@
+package test;
+
+import com.szq.rpc.annotation.Service;
 import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 /**
  * @author Ashur
  * @description 服务端api接口实现
  */
+@Service
 public class HelloServiceImpl implements HelloService {
     /**
      * 使用HelloServiceImpl初始化日志对象，方便在日志输出的时候，可以打印出日志信息所属的类。
@@ -18,6 +21,6 @@ public class HelloServiceImpl implements HelloService {
     public String hello(HelloObject object) {
         //使用{}可以直接将getMessage()内容输出
         logger.info("接收到消息：{}", object.getMessage());
-        return "本次处理来自Netty服务";
+        return "成功调用hello()方法";
     }
 }

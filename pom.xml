@@ -16,7 +16,6 @@
         <module>rpc-common</module>
         <module>rpc-core</module>
         <module>rpc-client</module>
-        <module>rpc-server</module>
     </modules>
 
     <properties>
@@ -55,6 +54,12 @@
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
             <version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>rpc-api</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

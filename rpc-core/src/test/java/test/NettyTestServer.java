@@ -1,5 +1,8 @@
-import com.szq.rpc.api.HelloService;
+package test;
+
+import com.szq.rpc.annotation.ServiceScan;
 import com.szq.rpc.serializer.CommonSerializer;
+import com.szq.rpc.transport.RpcServer;
 import com.szq.rpc.transport.netty.server.NettyServer;
 import com.szq.rpc.serializer.ProtostuffSerializer;
 
@@ -17,10 +20,10 @@ import com.szq.rpc.serializer.ProtostuffSerializer;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
+@ServiceScan
 public class NettyTestServer {
     public static void main(String[] args) {
-        HelloService helloService = new HelloServiceImpl();
-        NettyServer server = new NettyServer("127.0.0.1", 9999, CommonSerializer.PROTOBUF_SERIALIZER);
-        server.publishService(helloService, HelloService.class);
+        RpcServer server = new NettyServer("127.0.0.1", 9999, CommonSerializer.PROTOBUF_SERIALIZER);
+        server.start();
     }
 }

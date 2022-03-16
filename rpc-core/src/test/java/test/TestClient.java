@@ -1,4 +1,15 @@
+package test;
+
+import com.szq.rpc.api.ByeService;
+import com.szq.rpc.api.HelloObject;
 import com.szq.rpc.api.HelloService;
+import com.szq.rpc.loadbalancer.RoundRobinLoadBalancer;
+import com.szq.rpc.serializer.CommonSerializer;
+import com.szq.rpc.transport.RpcClient;
+import com.szq.rpc.transport.RpcClientProxy;
+import com.szq.rpc.serializer.KryoSerializer;
+import com.szq.rpc.transport.netty.client.NettyClient;
+import com.szq.rpc.transport.socket.server.SocketClient;
 
 /**
  * @author Ashur
@@ -14,7 +25,19 @@ import com.szq.rpc.api.HelloService;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public class TestServer {
+public class TestClient {
     public static void main(String[] args) {
+        SocketClient client = new SocketClient(CommonSerializer.KRYO_SERIALIZER, new RoundRobinLoadBalancer());
+        //接口与代理对象之间的中介对象
+        RpcClientProxy proxy = new RpcClientProxy(client);
+        //创建代理对象
+        HelloService helloService = proxy.getProxy(HelloService.class);
+        //接口方法的参数对象
+        HelloObject object = new HelloObject(12, "This is test message");
+        //由动态代理可知，代理对象调用hello()实际会执行invoke()
+        String res = helloService.hello(object);
+        System.out.println(res);
+        ByeService byeService = proxy.getProxy(ByeService.class);
+        System.out.println(byeService.bye("Netty"));
     }
 }

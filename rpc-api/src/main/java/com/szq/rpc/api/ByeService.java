@@ -1,6 +1,4 @@
-package com.szq.rpc.transport;
-
-import com.szq.rpc.serializer.CommonSerializer;
+package com.szq.rpc.api;
 
 /**
  * @author Ashur
@@ -16,13 +14,6 @@ import com.szq.rpc.serializer.CommonSerializer;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public interface RpcServer {
-    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
-    void start();
-    /**
-     * @description 向Nacos注册服务
-     * @param service, serviceClass]
-     * @return [void]
-     */
-    <T> void publishService(T service, String serviceName);
+public interface ByeService {
+    String bye(String name);
 }

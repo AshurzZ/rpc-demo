@@ -1,3 +1,6 @@
+package test;
+
+import com.szq.rpc.api.ByeService;
 import com.szq.rpc.serializer.CommonSerializer;
 import com.szq.rpc.transport.RpcClient;
 import com.szq.rpc.transport.netty.client.NettyClient;
@@ -23,27 +26,15 @@ import com.szq.rpc.serializer.ProtostuffSerializer;
  */
 public class NettyTestClient {
     public static void main(String[] args) {
-//        RpcClient client = new NettyClient("127.0.0.1", 9999);
-//        //接口与代理对象之间的中介对象
-//        RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
-//        //创建代理对象
-//        HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
-//        //接口方法的参数对象
-//        //由动态代理可知，代理对象调用hello()实际会执行invoke()
-//        HelloObject object = new HelloObject(12, "netty test");
-//        String res = helloService.hello(object);
-//        System.out.println(res);
-
         RpcClient client = new NettyClient(CommonSerializer.PROTOBUF_SERIALIZER);
-
         //接口与代理对象之间的中介对象
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         //创建代理对象
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(12, "this is netty style");
-        for (int i = 0; i < 20; i++) {
-            String res = helloService.hello(object);
-            System.out.println(res);
-        }
+        String res = helloService.hello(object);
+        System.out.println(res);
+        ByeService byeService = rpcClientProxy.getProxy(ByeService.class);
+        System.out.println(byeService.bye("Netty"));
     }
 }

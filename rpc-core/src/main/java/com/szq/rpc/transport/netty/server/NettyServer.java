@@ -8,6 +8,7 @@ import com.szq.rpc.provider.ServiceProvider;
 import com.szq.rpc.provider.ServiceProviderImpl;
 import com.szq.rpc.registry.ServiceRegistry;
 import com.szq.rpc.serializer.CommonSerializer;
+import com.szq.rpc.transport.AbstractRpcServer;
 import com.szq.rpc.transport.RpcServer;
 import com.szq.rpc.codec.CommonDecoder;
 import com.szq.rpc.codec.CommonEncoder;
@@ -39,13 +40,8 @@ import java.util.concurrent.TimeUnit;
  * Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]); 假设传来两个值，v1 与 v2，那么他们的先后顺序以 v1[0] 比 v2[0] 的结果为准，
  * 即：若 v1[0] < v2[0] 则 v1 < v2，若 = 则 =，若 > 则 >
  */
-public class NettyServer implements RpcServer {
-    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
-    private final String host;
-    private final int port;
+public class NettyServer extends AbstractRpcServer {
 
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
     private final CommonSerializer serializer;
     public NettyServer(String host, int port) {
         this(host, port, DEFAULT_SERIALIZER);
@@ -56,20 +52,8 @@ public class NettyServer implements RpcServer {
         serviceRegistry = new NacosServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
         serializer = CommonSerializer.getByCode(serializerCode);
-    }
-
-    /**
-     * @description 将服务保存在本地的注册表，同时注册到Nacos
-     * @param service, serviceClass]
-     */
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null) {
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
+        //自动注册服务
+        scanServices();
     }
     @Override
     public void start() {
